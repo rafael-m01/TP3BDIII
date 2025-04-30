@@ -33,7 +33,7 @@ public class Disponibilite {
         this.dateDisponibilite = dateDisponibilite;
         this.id_infirmiere = id_infirmiere;
     }
-    
+
     public int getId_disponibilite() {
         return id_disponibilite;
     }
