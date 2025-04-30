@@ -4,6 +4,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "Disponibilite")
+
 public class Disponibilite {
 
     @Id
@@ -16,6 +17,7 @@ public class Disponibilite {
     @Column(name ="heure_fin", nullable = false)
     private Date heureFin;
 
+    @Temporal(TemporalType.DATE)
     @Column(name ="date_disponibilite", nullable = false)
     private Date dateDisponibilite;
 
@@ -23,6 +25,7 @@ public class Disponibilite {
     @JoinColumn(name = "id_infirmiere", nullable = false)
     private Infirmiere id_infirmiere;
 
+    public Disponibilite() {}
     public Disponibilite(int id_disponibilite, Date heureDebut, Date heureFin, Date dateDisponibilite, Infirmiere id_infirmiere) {
         this.id_disponibilite = id_disponibilite;
         this.heureDebut = heureDebut;
