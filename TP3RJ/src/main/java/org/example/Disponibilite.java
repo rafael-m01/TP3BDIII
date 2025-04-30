@@ -34,6 +34,10 @@ public class Disponibilite {
         this.id_infirmiere = id_infirmiere;
     }
 
+    public Disponibilite() {
+
+    }
+
     public int getId_disponibilite() {
         return id_disponibilite;
     }
