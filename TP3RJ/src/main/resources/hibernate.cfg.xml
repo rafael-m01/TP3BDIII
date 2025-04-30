@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- JDBC connection settings -->
+        <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+        <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:freepdb1</property>
+        <property name="hibernate.connection.username">TP3RJ</property>
+        <property name="hibernate.connection.password">Soleil01</property>
+
+        <!-- SQL dialect for Oracle -->
+        <property name="hibernate.dialect">org.hibernate.dialect.Oracle12cDialect</property>
+
+        <!-- Echo all executed SQL to stdout -->
+        <property name="hibernate.show_sql">true</property>
+
+        <!-- Format SQL in logs -->
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Automatically create or update DB schema -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Caching (optional) -->
+        <property name="hibernate.cache.use_second_level_cache">false</property>
+
+        <!-- Mapping files or annotated classes -->
+        <!-- Example: -->
+        <!-- <mapping class="com.example.model.Client"/> -->
+
+    </session-factory>
+</hibernate-configuration>
