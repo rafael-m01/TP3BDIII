@@ -10,9 +10,7 @@ import org.hibernate.service.ServiceRegistry;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -43,11 +41,22 @@ public class Main {
         SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
         //extraire Noms:
-        List<String> noms = new ArrayList<>();
+        List<String> noms =lireFichier("TP3RJ/src/main/resources/Nom.txt");
 
-        noms =lireFichier("TP3RJ/src/main/resources/Nom.txt");
+        List<String> prenoms = lireFichier("TP3RJ/src/main/resources/prenom.txt");
 
-        List<String> mots = noms;
+        Set<String> clients = genererPersonnesUniques(prenoms, noms, 5000);
+        Set<String> infirmieres = genererPersonnesUniques(prenoms, noms, 100);
+
+        // Affichage
+        int count = 1;
+        for (String fullName : clients) {
+            System.out.println(count++ + ". " + fullName);
+        }
+        for (String fullName : infirmieres) {
+            System.out.println(count++ + ". " + fullName);
+        }
+
 
 
         // Test simple
@@ -74,7 +83,39 @@ public class Main {
         }
 
         sessionFactory.close();
+
+
+
+
     }
+    // Génère les combinaisons uniques
+    public static Set<String> genererPersonnesUniques(List<String> prenoms, List<String> noms, int nombre) {
+        Set<String> resultats = new LinkedHashSet<>();
+        Random random = new Random();
+
+        int maxCombinations = prenoms.size() * noms.size();
+        if (nombre > maxCombinations) {
+            throw new IllegalArgumentException("Impossible de générer " + nombre + " noms uniques avec seulement " + maxCombinations + " combinaisons possibles.");
+        }
+
+        while (resultats.size() < nombre) {
+            String prenom = prenoms.get(random.nextInt(prenoms.size()));
+            String nom = noms.get(random.nextInt(noms.size()));
+            resultats.add(prenom + " " + nom); // ajoute seulement si unique
+        }
+
+        return resultats;
+    }
+    private static void listerInfirmieres(SessionFactory sessionFactory) {
+        System.out.println("\n--- Liste des infirmières ---");
+        try (Session session = sessionFactory.openSession()) {
+            List<Infirmiere> infirmieres = session.createQuery("from Infirmiere", Infirmiere.class).getResultList();
+            for (Infirmiere i : infirmieres) {
+                System.out.println("ID: " + i.getId_infirmiere() + " | Nom: " + i.getNom());
+            }
+        }
+    }
+
     public static int saisirOption(String message){
         Scanner sc = new Scanner(System.in);
         System.out.println(message);
