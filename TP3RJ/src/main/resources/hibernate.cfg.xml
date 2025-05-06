@@ -4,10 +4,7 @@
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
-
     <session-factory>
-
-
         <!-- JDBC connection settings -->
         <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
         <property name="hibernate.connection.url">jdbc:oracle:thin:@//localhost:1521/FREEPDB1</property>
@@ -37,5 +34,4 @@
         <property name="current_session_context_class">thread</property>
 
     </session-factory>
-
 </hibernate-configuration>
