@@ -5,19 +5,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-
-
-
-import java.util.List;
-import java.util.Scanner;
 // remplace par ton entité réelle
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -48,64 +41,29 @@ public class Main {
         SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
         //extraire Noms:
-        List<String> noms = new ArrayList<>();
+        List<String> noms =lireFichier("TP3RJ/src/main/resources/Nom.txt");
 
-        noms =lireFichier("TP3RJ/src/main/resources/Nom.txt");
+        List<String> prenoms = lireFichier("TP3RJ/src/main/resources/prenom.txt");
 
-        List<String> mots = noms;
+        Set<String> clients = genererPersonnesUniques(prenoms, noms, 5000);
+        Set<String> infirmieres = genererPersonnesUniques(prenoms, noms, 100);
+
+        // Affichage
+        int count = 1;
+        for (String fullName : clients) {
+            System.out.println(count++ + ". " + fullName);
+        }
+        for (String fullName : infirmieres) {
+            System.out.println(count++ + ". " + fullName);
+        }
+
 
 
         // Test simple
-        Scanner scanner = new Scanner(System.in);
-        int choix;
-        do {
-            System.out.println("\n--- MENU ---");
-            System.out.println("1. Ajouter un client");
-            System.out.println("2. Lister les infirmières");
-            System.out.println("0. Quitter");
-            System.out.print("Votre choix : ");
-            choix = scanner.nextInt();
-            scanner.nextLine();
-
-            switch (choix) {
-                case 1:
-                    ajouterClient(scanner);
-                    break;
-                case 2:
-                    listerInfirmieres();
-                    break;
-                case 0:
-                    System.out.println("Fin du programme.");
-                    break;
-                default:
-                    System.out.println("Option invalide.");
-            }
-        } while (choix != 0);
-
-        sessionFactory.close();
-        scanner.close();
-    }
-
-
-    private static void ajouterClient(Scanner scanner) {
-        System.out.println("\n--- Ajouter un client ---");
-        System.out.print("Nom : ");
-        String nom = scanner.nextLine();
-        System.out.print("Courriel : ");
-        String courriel = scanner.nextLine();
-        System.out.print("Mot de passe : ");
-        String motDePasse = scanner.nextLine();
-
-        Client client = new Client();
-        client.setNom(nom);
-        client.setCourriel(courriel);
-        client.setMotDePasse(motDePasse);
-
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            session.save(client);
+            System.out.println("Hibernate fonctionne !");
             session.getTransaction().commit();
-            System.out.println("Client ajouté avec succès !");
 
 
 
@@ -123,9 +81,32 @@ public class Main {
 
 
         }
-    }
 
-    private static void listerInfirmieres() {
+        sessionFactory.close();
+
+
+
+
+    }
+    // Génère les combinaisons uniques
+    public static Set<String> genererPersonnesUniques(List<String> prenoms, List<String> noms, int nombre) {
+        Set<String> resultats = new LinkedHashSet<>();
+        Random random = new Random();
+
+        int maxCombinations = prenoms.size() * noms.size();
+        if (nombre > maxCombinations) {
+            throw new IllegalArgumentException("Impossible de générer " + nombre + " noms uniques avec seulement " + maxCombinations + " combinaisons possibles.");
+        }
+
+        while (resultats.size() < nombre) {
+            String prenom = prenoms.get(random.nextInt(prenoms.size()));
+            String nom = noms.get(random.nextInt(noms.size()));
+            resultats.add(prenom + " " + nom); // ajoute seulement si unique
+        }
+
+        return resultats;
+    }
+    private static void listerInfirmieres(SessionFactory sessionFactory) {
         System.out.println("\n--- Liste des infirmières ---");
         try (Session session = sessionFactory.openSession()) {
             List<Infirmiere> infirmieres = session.createQuery("from Infirmiere", Infirmiere.class).getResultList();
