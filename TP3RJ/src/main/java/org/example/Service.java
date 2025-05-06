@@ -15,10 +15,10 @@ public class Service {
     @Column(name = "nom_service", nullable = false, length = 25)
     private String nom;
 
-    @Column(nullable = false)
+    @Column(name = "duree",nullable = false)
     private Duration duree;
 
-    @Column(nullable = false)
+    @Column(name = "prix",nullable = false)
     private Double prix;
 
     public int getId() {

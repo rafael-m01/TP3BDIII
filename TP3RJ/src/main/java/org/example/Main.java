@@ -7,6 +7,11 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 // remplace par ton entité réelle
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -37,11 +42,35 @@ public class Main {
         // Crée le SessionFactory
         SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
+        //extraire Noms:
+        List<String> noms = new ArrayList<>();
+
+        noms =lireFichier("TP3RJ/src/main/resources/Nom.txt");
+
+        List<String> mots = noms;
+
+
         // Test simple
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             System.out.println("Hibernate fonctionne !");
             session.getTransaction().commit();
+
+
+
+        }
+
+        sessionFactory.close();
+
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+
+
+            session.getTransaction().commit();
+
+
+
         }
 
         sessionFactory.close();
@@ -51,4 +80,29 @@ public class Main {
         System.out.println(message);
         return sc.nextInt();
     }
-}
+    public static List<String> lireFichier(String chemin){
+        List<String> mots = new ArrayList<>();
+
+        try {
+            // Lire toutes les lignes du fichier
+            List<String> lignes = Files.readAllLines(Paths.get(chemin));
+
+            for (String ligne : lignes) {
+                // Découper chaque ligne en mots (en se basant sur les espaces et ponctuations)
+                String[] motsLigne = ligne.split("\\W+"); // \\W+ = tout ce qui n'est pas un caractère alphanumérique
+
+                for (String mot : motsLigne) {
+                    if (!mot.isEmpty()) {
+                        mots.add(mot);
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
+        }
+
+        return mots;
+    }
+
+    }

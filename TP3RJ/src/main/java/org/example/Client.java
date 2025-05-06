@@ -11,14 +11,25 @@ public class Client {
     @Column(name = "id_client")
     private int id;
 
-    @Column(nullable = false, length = 20)
+    @Column(name="nom", nullable = false, length = 20)
     private String nom;
 
-    @Column(nullable = false, length = 25)
+    @Column(name="prenom", nullable = false, length = 20)
+    private String prenom;
+
+    @Column(name="courriel", nullable = false, length = 25)
     private String courriel;
 
     @Column(name = "mot_de_passe", nullable = false, length = 25)
     private String motDePasse;
+
+    public Client() {}
+    public Client(String nom, String prenom, String courriel, String motDePasse) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.courriel = courriel;
+        this.motDePasse = motDePasse;
+    }
 
     public String getNom() {
         return nom;
