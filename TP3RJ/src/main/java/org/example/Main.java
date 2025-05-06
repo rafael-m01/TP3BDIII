@@ -5,6 +5,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+
+
+
+import java.util.List;
+import java.util.Scanner;
 // remplace par ton entité réelle
 
 import java.util.Scanner;
@@ -37,15 +42,69 @@ public class Main {
         // Crée le SessionFactory
         SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
-        // Test simple
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            System.out.println("Hibernate fonctionne !");
-            session.getTransaction().commit();
-        }
+        Scanner scanner = new Scanner(System.in);
+        int choix;
+        do {
+            System.out.println("\n--- MENU ---");
+            System.out.println("1. Ajouter un client");
+            System.out.println("2. Lister les infirmières");
+            System.out.println("0. Quitter");
+            System.out.print("Votre choix : ");
+            choix = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choix) {
+                case 1:
+                    ajouterClient(scanner);
+                    break;
+                case 2:
+                    listerInfirmieres();
+                    break;
+                case 0:
+                    System.out.println("Fin du programme.");
+                    break;
+                default:
+                    System.out.println("Option invalide.");
+            }
+        } while (choix != 0);
 
         sessionFactory.close();
+        scanner.close();
     }
+
+
+    private static void ajouterClient(Scanner scanner) {
+        System.out.println("\n--- Ajouter un client ---");
+        System.out.print("Nom : ");
+        String nom = scanner.nextLine();
+        System.out.print("Courriel : ");
+        String courriel = scanner.nextLine();
+        System.out.print("Mot de passe : ");
+        String motDePasse = scanner.nextLine();
+
+        Client client = new Client();
+        client.setNom(nom);
+        client.setCourriel(courriel);
+        client.setMotDePasse(motDePasse);
+
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.save(client);
+            session.getTransaction().commit();
+            System.out.println("Client ajouté avec succès !");
+        }
+    }
+
+    private static void listerInfirmieres() {
+        System.out.println("\n--- Liste des infirmières ---");
+        try (Session session = sessionFactory.openSession()) {
+            List<Infirmiere> infirmieres = session.createQuery("from Infirmiere", Infirmiere.class).getResultList();
+            for (Infirmiere i : infirmieres) {
+                System.out.println("ID: " + i.getId_infirmiere() + " | Nom: " + i.getNom());
+            }
+        }
+    }
+
     public static int saisirOption(String message){
         Scanner sc = new Scanner(System.in);
         System.out.println(message);
