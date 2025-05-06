@@ -4,7 +4,9 @@
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
+
     <session-factory>
+
 
         <!-- JDBC connection settings -->
         <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
@@ -33,5 +35,7 @@
         <!-- Set the current session context -->
 
         <property name="current_session_context_class">thread</property>
+
     </session-factory>
+
 </hibernate-configuration>
